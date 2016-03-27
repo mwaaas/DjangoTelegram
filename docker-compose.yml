@@ -1,0 +1,44 @@
+version: '2'
+services:
+  lb:
+    image: 'dockercloud/haproxy:latest'
+    links:
+      - nginx
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - '8003:80'
+      - '443:443'
+      - '1936:1936'
+
+  db:
+    image: postgres:9.5
+    environment:
+      - POSTGRES_DB=django_telegram
+      - POSTGRES_PASSWORD=mysecretpassword
+
+  web:
+    build: .
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - '8080:80'
+    links:
+      - db
+    environment:
+      - 'VIRTUAL_HOST=*/*'
+      - 'DATABASE_URL=postgres://postgres:mysecretpassword@db:5432/django_telegram'
+      - RAVEN_DNS=https://9f607d7813e54aa8a91295812b706c28:725accda92c447488383b51fcb97b8ac@app.getsentry.com/66589
+      - TELEGRAM_TOKEN=210080076:AAFx9AOiApV6VIeCXR5p0M5KjdMcp4_fWv4
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx_dockerfile
+    volumes:
+      - ./static:/usr/src/static/
+    environment:
+      - 'VIRTUAL_HOST=*/static/*'
+      - VIRTUAL_HOST_WEIGHT=1
+
