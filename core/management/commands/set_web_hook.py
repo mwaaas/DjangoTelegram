@@ -30,10 +30,8 @@ class Command(BaseCommand):
         cert = options["cert"]
 
         bot = telepot.Bot(settings.TELEGRAM_TOKEN)
-        cert_file = open(cert)
-        results = bot.setWebhook(telgram_app_url, cert_file)
 
-        bot.setWebhook(telgram_app_url, )
+        results = bot.setWebhook(telgram_app_url, open(cert, 'rb'))
         
         print("web hook was created successfully {}".format(results))
 
