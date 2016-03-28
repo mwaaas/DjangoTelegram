@@ -14,7 +14,7 @@ class Command(BaseCommand):
         # Named (optional) arguments
         parser.add_argument('--telgram_url',
             dest='telgram_url',
-            default='https://www.tumacredo.com/telegram/',
+            default='https://lb.djangotelegram.62bbab5d.svc.dockerapp.io:88/bot/',
             help=('telegram url'))
 
         default_cert = os.path.join(settings.BASE_DIR, 'YOURPUBLIC.pem')
